@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="625" viewBox="0 0 1200 625" role="img" aria-labelledby="title desc">
+<title id="title">RepoAtlas demo map and diagnostic finding</title>
+<desc id="desc">Curated demo fixture preview with four Python modules, four resolved internal import edges, one import cycle, and a diagnostic panel. Counts describe the included example, not a benchmark.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050B17"/><stop offset=".56" stop-color="#0A1830"/><stop offset="1" stop-color="#15102B"/></linearGradient>
+  <filter id="glow"><feGaussianBlur stdDeviation="10"/></filter>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#43D8F5"/></marker>
+  <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#FF8F9F"/></marker>
+  <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M28 0H0V28" fill="none" stroke="#315271" opacity=".23"/></pattern>
+</defs>
+<rect width="1200" height="625" rx="24" fill="url(#bg)" stroke="#274766"/>
+<rect width="1200" height="625" rx="24" fill="url(#grid)"/>
+<circle cx="1120" cy="20" r="160" fill="#3A64FF" opacity=".09" filter="url(#glow)"/>
+<text x="34" y="42" fill="#F3F7FF" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="21" font-weight="760">RepoAtlas <tspan fill="#49DDF9">/</tspan> output preview</text>
+<text x="34" y="67" fill="#86A9CA" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="12">INCLUDED DEMO FIXTURE · STATIC IMPORT RELATIONSHIPS</text>
+<rect x="927" y="27" width="238" height="32" rx="16" fill="#0B263B" stroke="#267D8F"/>
+<circle cx="945" cy="43" r="4" fill="#54E2BD"/>
+<text x="959" y="47" fill="#C4F9E9" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" font-weight="750">ANALYSIS PREVIEW · DEMO</text>
+<g transform="translate(30 89)">
+  <rect width="1140" height="95" rx="15" fill="#081526" stroke="#234363"/>
+  <g transform="translate(18 16)">
+    <rect width="263" height="63" rx="11" fill="#0B2036" stroke="#24628D"/>
+    <text x="16" y="22" fill="#8BAFCB" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">PYTHON MODULES</text>
+    <text x="16" y="51" fill="#F4F8FF" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="760">04</text>
+    <text x="83" y="48" fill="#8EAAC4" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">parsed source files</text>
+  </g>
+  <g transform="translate(304 16)">
+    <rect width="263" height="63" rx="11" fill="#0B2036" stroke="#24628D"/>
+    <text x="16" y="22" fill="#8BAFCB" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">INTERNAL EDGES</text>
+    <text x="16" y="51" fill="#57DFF7" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="760">04</text>
+    <text x="83" y="48" fill="#8EAAC4" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">resolved imports</text>
+  </g>
+  <g transform="translate(590 16)">
+    <rect width="263" height="63" rx="11" fill="#1F172C" stroke="#9A5878"/>
+    <text x="16" y="22" fill="#D6A4B8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">IMPORT CYCLES</text>
+    <text x="16" y="51" fill="#FF9CAA" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="760">01</text>
+    <text x="83" y="48" fill="#CDA7B8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">review signal</text>
+  </g>
+  <g transform="translate(876 16)">
+    <rect width="246" height="63" rx="11" fill="#0C282B" stroke="#2C8077"/>
+    <text x="16" y="22" fill="#94D8CE" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">ENTRY POINT SIGNALS</text>
+    <text x="16" y="51" fill="#65E4C5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" font-weight="760">01</text>
+    <text x="83" y="48" fill="#9ACBC5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">main guard</text>
+  </g>
+</g>
+<g transform="translate(30 203)">
+  <rect width="745" height="369" rx="17" fill="#071320" stroke="#274967"/>
+  <text x="22" y="30" fill="#EAF4FF" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="750">MODULE RELATIONSHIPS</text>
+  <text x="720" y="30" text-anchor="end" fill="#7EA2C2" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10">FOUR MODULES · FOUR EDGES</text>
+  <path d="M205 102 C285 102 310 135 378 153" stroke="#41BFE5" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".9"/>
+  <path d="M205 102 C245 157 245 231 378 270" stroke="#41BFE5" stroke-width="2.2" fill="none" marker-end="url(#arrow)" opacity=".9"/>
+  <path d="M512 153 C562 160 556 254 512 270" stroke="#FF899C" stroke-width="2.7" fill="none" marker-end="url(#arrowRed)"/>
+  <path d="M378 270 C320 252 323 179 378 153" stroke="#FF899C" stroke-width="2.7" fill="none" marker-end="url(#arrowRed)"/>
+  <g>
+    <rect x="42" y="76" width="163" height="53" rx="11" fill="#0D2A42" stroke="#37DDF8" stroke-width="1.5"/>
+    <circle cx="58" cy="92" r="4" fill="#4BDCF8"/>
+    <text x="72" y="97" fill="#F2F8FF" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700">app.py</text>
+    <text x="57" y="115" fill="#8FB3D1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10">main guard</text>
+  </g>
+  <g>
+    <rect x="378" y="126" width="202" height="53" rx="11" fill="#251A34" stroke="#FF899C" stroke-width="1.7"/>
+    <circle cx="394" cy="142" r="4" fill="#FF899C"/>
+    <text x="408" y="147" fill="#FFF4F6" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700">services.billing</text>
+    <text x="393" y="165" fill="#D2A8B7" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10">imports services.users</text>
+  </g>
+  <g>
+    <rect x="378" y="243" width="202" height="53" rx="11" fill="#251A34" stroke="#FF899C" stroke-width="1.7"/>
+    <circle cx="394" cy="259" r="4" fill="#FF899C"/>
+    <text x="408" y="264" fill="#FFF4F6" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700">services.users</text>
+    <text x="393" y="282" fill="#D2A8B7" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10">imports services.billing</text>
+  </g>
+  <g>
+    <rect x="42" y="246" width="210" height="49" rx="11" fill="#0B242D" stroke="#3CCAB0"/>
+    <circle cx="58" cy="262" r="4" fill="#4CE0BF"/>
+    <text x="72" y="267" fill="#E7FFFA" font-family="ui-monospace,Consolas,monospace" font-size="11.5" font-weight="700">services/__init__.py</text>
+    <text x="57" y="283" fill="#91C9C1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10">package initializer</text>
+  </g>
+  <rect x="28" y="320" width="689" height="30" rx="8" fill="#0E2439" stroke="#234664"/>
+  <circle cx="43" cy="335" r="4" fill="#59DFF8"/>
+  <text x="56" y="339" fill="#A8C7E3" font-family="ui-monospace,Consolas,monospace" font-size="10.5">repoatlas scan examples/demo_project --output demo-atlas.json</text>
+</g>
+<g transform="translate(794 203)">
+  <rect width="376" height="369" rx="17" fill="#0B1626" stroke="#274967"/>
+  <text x="20" y="30" fill="#EAF4FF" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="13" font-weight="750">FINDING TO REVIEW</text>
+  <rect x="18" y="49" width="340" height="103" rx="12" fill="#281927" stroke="#A85877"/>
+  <rect x="31" y="61" width="89" height="21" rx="10" fill="#593044"/>
+  <text x="75" y="75" text-anchor="middle" fill="#FFD8E0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9.5" font-weight="750">WARNING</text>
+  <text x="31" y="101" fill="#FFF1F4" font-family="ui-monospace,Consolas,monospace" font-size="12" font-weight="700">IMPORT_CYCLES_DETECTED</text>
+  <text x="31" y="123" fill="#D5ACB8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10.5">One strongly connected component found.</text>
+  <text x="20" y="181" fill="#85A8C8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="700" letter-spacing=".7">WHY IT MATTERS</text>
+  <text x="20" y="203" fill="#D9E8F6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11.5">Mutual imports can signal tight coupling.</text>
+  <text x="20" y="222" fill="#D9E8F6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11.5">Review the relationship before refactoring.</text>
+  <path d="M20 242H356" stroke="#233B54"/>
+  <text x="20" y="266" fill="#85A8C8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10.5" font-weight="700" letter-spacing=".7">INTERPRETATION</text>
+  <text x="20" y="288" fill="#9BB6D0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">A static import edge is not proof of</text>
+  <text x="20" y="306" fill="#9BB6D0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="11">runtime execution. Confirm with tests.</text>
+  <rect x="18" y="327" width="340" height="25" rx="8" fill="#102B39" stroke="#28677B"/>
+  <circle cx="32" cy="339" r="3.5" fill="#5FE3CD"/>
+  <text x="43" y="343" fill="#BDEEE6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="9.5" font-weight="700">RULE-BASED SIGNAL · NOT A QUALITY SCORE</text>
+</g>
+<text x="31" y="605" fill="#6D91B4" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="10.5">DEMO FIXTURE PREVIEW · RELATIONSHIP COUNTS DESCRIBE THE INCLUDED SAMPLE · NOT A BENCHMARK</text>
+</svg>
