@@ -174,7 +174,8 @@ def render_markdown(atlas: dict[str, Any], *, max_files: int = 80, max_modules: 
     if files:
         lines.extend(["| Path | Category | Bytes |", "|---|---|---:|"])
         for item in files[:max_files]:
-            lines.append(f"| {item['path'].replace('|', '\\\\|')} | {item['category']} | {item['size_bytes']} |")
+            file_path = item["path"].replace("|", "\\\\|")
+            lines.append(f"| {file_path} | {item['category']} | {item['size_bytes']} |")
         if len(files) > max_files:
             lines.append(f"\n*Showing {max_files} of {len(files)} files. The JSON snapshot contains the complete inventory.*")
     else:

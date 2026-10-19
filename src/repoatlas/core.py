@@ -445,6 +445,3 @@ def scan_repository(
         },
     }
 
-
-class RepoAtlasError(Exception):
-    """Expected user-facing error from scanning or snapshot handling."""
