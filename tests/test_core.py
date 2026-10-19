@@ -143,7 +143,8 @@ class CoreTests(unittest.TestCase):
     def test_module_docstrings_are_opt_in(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            self.write(root, "app.py", '"""DOCSTRING_SHOULD_BE_OPT_IN_482."""\nvalue = 1\n')
+            source = '"""DOCSTRING_SHOULD_BE_OPT_IN_482."""' + chr(10) + "value = 1" + chr(10)
+            self.write(root, "app.py", source)
             default_atlas = scan_repository(root)
             explicit_atlas = scan_repository(root, include_docstrings=True)
         self.assertIsNone(default_atlas["modules"][0]["docstring"])
