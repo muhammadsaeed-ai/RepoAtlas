@@ -1,81 +1,182 @@
 # RepoAtlas
 
 <p align="center">
-  <img src="assets/readme/progress-loop.gif" alt="Animated workflow indicator" width="420" />
+  <img src="assets/readme/hero.svg" alt="RepoAtlas — Python repository analysis and architecture visualization." width="100%" />
 </p>
 
-<p align="center"><strong>Turn an unfamiliar codebase into a visual map of files, modules, imports, and architecture.</strong></p>
+<p align="center"><strong>Understand a codebase before you change it.</strong><br/>Static import graphs · cycle detection · structural metrics · beautiful, portable exports</p>
+
 <p align="center">
-  <a href="#the-idea">The idea</a> · <a href="#visual-workflow">Workflow</a> · <a href="#proposed-architecture">Architecture</a> · <a href="#roadmap">Roadmap</a>
+  <a href="#quick-start">Quick start</a> · <a href="docs/ARCHITECTURE.md">Architecture</a> · <a href="docs/USAGE.md">Usage</a> · <a href="docs/ROADMAP.md">Roadmap</a>
 </p>
+
 <p align="center">
-  <img alt="Stage: design proposal" src="https://img.shields.io/badge/stage-design%20proposal-7867FF?style=flat-square" />
-  <img alt="Analysis approach" src="https://img.shields.io/badge/approach-local%20static%20analysis-2563EB?style=flat-square" />
-  <img alt="Open source concept" src="https://img.shields.io/badge/project-open%20source%20concept-168AAD?style=flat-square" />
+  <img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" />
+  <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-20C997?style=flat-square" />
+  <img alt="Zero runtime dependencies" src="https://img.shields.io/badge/runtime%20dependencies-0-22A699?style=flat-square" />
+  <img alt="Local-first" src="https://img.shields.io/badge/analysis-local--first-4263EB?style=flat-square" />
+  <img alt="CI" src="https://github.com/muhammadsaeed-ai/RepoAtlas/actions/workflows/ci.yml/badge.svg" />
 </p>
 
-> **Project status: design-stage.** This repository currently contains the concept README only. There is no scanner, parser, graph engine, or CLI implementation available yet. The diagrams below illustrate the proposed design.
+> **Status: v0.1.0 alpha.** RepoAtlas now has an executable Python CLI, static import graph, cycle detection, structural metrics, JSON snapshots, Markdown reports, Mermaid diagrams, and standalone SVG exports. Multi-language analysis and interactive graph navigation are not included yet.
 
-## The idea
+RepoAtlas is a local-first **Python repository mapper and architecture visualizer**. It inventories files, parses Python modules with the standard-library AST, resolves visible internal imports, detects strongly connected import cycles, and exports a reusable snapshot with visual diagrams for code reviews and project documentation.
 
-RepoAtlas is a proposed **codebase analyzer and architecture visualization tool**. It should help a developer understand a new repository by generating a navigable inventory of files, modules, imports, dependencies, entry points, and architectural relationships.
+The scanner does not import or run target code, and it does not make network requests.
 
-The intended workflow is local-first: inspect source files that the user explicitly selects, build an inspectable relationship graph, then export documentation that a maintainer can review and commit.
+## What you get
+
+| Capability | Output | Developer value |
+|---|---|---|
+| Repository inventory | Relative paths, categories, file sizes | Understand repository shape quickly |
+| AST metrics | Lines, functions, classes, docstring summary | Find complex or important modules |
+| Internal dependency graph | Directed edges, import lines, in/out degree | Navigate declared code relationships |
+| Cycle detection | Strongly connected import groups | Find coupling worth reviewing |
+| Entry-point signals | Main guards, __main__.py, detected console scripts | Locate likely execution paths |
+| Structural findings | Missing README, parse warnings, cycle signals | Turn a scan into a review checklist |
+| Visual exports | Markdown, Mermaid, SVG, JSON | Share the same analysis in docs, code reviews, and automation |
+| Bounded local scan | Ignore rules, exclusions, source/file limits | Keep scans predictable and reviewable |
 
 ## Visual workflow
 
-<p align="center"><img src="assets/readme/workflow.svg" alt="Proposed RepoAtlas workflow from scanning a repository through import resolution and graph construction to Mermaid, SVG, and Markdown exports." width="100%" /></p>
+<p align="center"><img src="assets/readme/workflow.svg" alt="RepoAtlas workflow: inventory repository files, parse Python AST, build graph relationships, export visual and machine-readable reports." width="100%" /></p>
 
-## Proposed architecture
+## Architecture at a glance
 
-<p align="center"><img src="assets/readme/architecture.svg" alt="Proposed RepoAtlas architecture: repository scanner, language parsers, graph model, and visual documentation exporters." width="100%" /></p>
+<p align="center"><img src="assets/readme/architecture.svg" alt="Four engineering layers: filesystem scanner, Python AST parser, graph and cycle analysis, then Markdown, Mermaid, SVG and JSON exporters." width="100%" /></p>
 
-## What it aims to map
+## Quick start
 
-| Map layer | Examples | Intended output |
-|---|---|---|
-| Repository inventory | Source files, tests, configs, docs, generated folders | Filterable file tree and summary |
-| Module relationships | Python imports and package boundaries | Directed dependency graph |
-| Entry points | CLI commands, `__main__`, registered scripts | Entry-point index |
-| Architectural clusters | Internal modules that reference each other | Candidate subsystem groups, labeled as heuristics |
-| Documentation gaps | Modules or packages with no nearby docs | Optional checklist, not an automatic quality score |
-| Exported diagrams | Module graphs and component relationships | SVG, Mermaid, Markdown, and JSON graph data |
+### 1. Install
 
-Parser coverage, language support, and the accuracy of architectural clustering must be measured during implementation. RepoAtlas should not claim to understand arbitrary code or infer architecture perfectly from filenames alone.
+Python 3.10 or newer is required. Runtime operation has zero mandatory third-party dependencies.
 
-## Intended outputs
+~~~bash
+git clone https://github.com/muhammadsaeed-ai/RepoAtlas.git
+cd RepoAtlas
+python -m venv .venv
+~~~
 
-- **Markdown reports** that introduce a repository and link to useful areas.
-- **Mermaid diagrams** that can be edited in pull requests.
-- **SVG architecture maps** suitable for README documentation.
-- **Machine-readable graph data** for custom scripts or later visual tools.
+Activate the environment, then install the package.
 
-These exports are planned and are not available as working commands yet.
+**Windows PowerShell**
 
-## Design principles
+~~~powershell
+.\\.venv\\Scripts\\Activate.ps1
+python -m pip install .
+~~~
 
-- **Local-first analysis:** no source upload or telemetry by default.
-- **Ignore-aware traversal:** respect version-control ignore rules and common virtualenv/build directories.
-- **Bounded and deterministic:** stable ordering, sensible file-size limits, and reproducible output.
-- **Explicit confidence:** distinguish parser-backed links from guessed clusters.
-- **Reviewable changes:** generated README content should be opt-in and never silently overwrite hand-written documentation.
+**macOS / Linux**
 
-## Roadmap
+~~~bash
+source .venv/bin/activate
+python -m pip install .
+~~~
 
-- [ ] Define a versioned file/module graph schema.
-- [ ] Implement safe repository traversal and ignore handling.
-- [ ] Add Python AST import extraction and deterministic test fixtures.
-- [ ] Build dependency graph algorithms and report output.
-- [ ] Generate editable Mermaid and static SVG diagrams.
-- [ ] Add CLI export options, size limits, and overwrite safeguards.
-- [ ] Evaluate additional languages only after the Python workflow is reliable.
+### 2. Scan a repository
+
+~~~bash
+repoatlas scan /path/to/your/project --output atlas.json
+~~~
+
+Or scan the current directory:
+
+~~~bash
+repoatlas scan . --output atlas.json
+~~~
+
+Example terminal summary (illustrative, not measured benchmark data):
+
+~~~text
+RepoAtlas scan complete: my-project
+Files: 842 | Python modules: 126 | Internal edges: 318 | Cycles: 2
+Snapshot: /path/to/atlas.json
+Static analysis only: project code was not executed; no network requests were made.
+~~~
+
+### 3. Export polished artifacts
+
+~~~bash
+repoatlas render atlas.json --format markdown --output atlas-report.md
+repoatlas render atlas.json --format mermaid --output dependency-graph.mmd
+repoatlas render atlas.json --format svg --output dependency-map.svg
+~~~
+
+The JSON snapshot can be rendered repeatedly without rescanning the repository.
+
+## Try the demo project
+
+~~~bash
+repoatlas scan examples/demo_project --output /tmp/demo-atlas.json
+repoatlas render /tmp/demo-atlas.json --format markdown
+repoatlas render /tmp/demo-atlas.json --format svg --output /tmp/demo-atlas.svg
+~~~
+
+Open the SVG in a browser or vector editor. The sample intentionally includes a small import cycle so the analyzer can demonstrate a structural warning; it is a diagnostic fixture, not ideal architecture.
+
+## Read the graph
+
+<p align="center"><img src="assets/readme/graph-legend.svg" alt="Legend describing Python modules, test modules, parse warnings, and directed static import edges." width="100%" /></p>
+
+- **Node:** an inventoried Python module or package initializer.
+- **Arrow:** a declared import that resolves to a module inside the scanned repository.
+- **Cycle:** a strongly connected group of modules that import each other directly or indirectly.
+- **In-degree:** distinct modules importing a given module.
+- **Out-degree:** distinct project modules imported by a module.
+- **External import root:** not resolved to this repository or the standard-library module set. It does not prove that an external package is installed.
+- **Finding:** a rule-driven review signal, not an automated quality score.
+
+## Scan controls
+
+~~~bash
+repoatlas scan . --exclude "generated/**" --exclude "*.snap"
+repoatlas scan . --max-files 20000 --max-python-bytes 1048576 --output atlas.json
+repoatlas scan . --output -
+repoatlas render atlas.json --format markdown --output atlas-report.md --force
+~~~
+
+Common generated folders are excluded by default and root/nested .gitignore patterns are honored using a practical subset of Git semantics. Existing outputs are not overwritten unless --force is passed.
+
+## Privacy and safety
+
+- Target modules are never imported or executed.
+- The scanner makes no network requests and performs no source upload.
+- Snapshots contain repository-relative paths, not the absolute root path.
+- Python source is parsed locally but source contents are never embedded in JSON.
+- Symlinked files and directories are skipped rather than followed.
+- File count, source reads, snapshot loading, and graph exports have limits.
+- Reports can still reveal module names, relative paths, docstrings and dependencies. Review before sharing outside your team.
+
+See [Security policy](SECURITY.md) and [Architecture](docs/ARCHITECTURE.md).
+
+## Verification
+
+CI is configured for Python 3.10–3.14 on Ubuntu, Windows, and macOS. The matrix is only considered verified after GitHub Actions finishes successfully.
+
+~~~bash
+python -m pip install -e ".[dev]"
+python -m pytest
+python -m ruff check src tests examples
+python -m ruff format --check src tests examples
+python -m build
+~~~
+
+## Current boundaries
+
+RepoAtlas v0.1.0 parses Python only. Other languages appear in the file inventory but do not receive dependency analysis. Interactive graph browsing, runtime tracing, semantic architecture inference, and proof that external dependencies are installed are not included.
+
+See the [roadmap](docs/ROADMAP.md) for future work.
 
 ## Contributing
 
-Useful early work includes schema design, parser test fixtures, edge-case repositories, and decisions about how to display large dependency graphs. Feature claims should be added to this README only after the relevant behavior is implemented and tested.
+Reproducible parser edge cases, graph correctness tests, import-resolution examples, and accessibility improvements are especially useful. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md) before contributing. Never submit private source code or unreviewed graph exports.
 
-## Search and GitHub topics
+## License
 
-Suggested topics: `codebase-analysis`, `architecture-visualization`, `dependency-graph`, `static-analysis`, `python`, `code-documentation`, `mermaid`, `repository-map`, `developer-tools`, `open-source`.
+MIT. See [LICENSE](LICENSE).
 
-These keywords describe the planned project; search rankings or traffic are not guaranteed.
+## GitHub topics and discovery keywords
+
+Suggested topics: python, codebase-analysis, repository-analysis, static-analysis, architecture-visualization, dependency-graph, import-graph, developer-tools, code-documentation, mermaid, software-architecture, repository-map.
+
+These terms describe actual project scope and may improve discovery; search ranking or traffic is not guaranteed.

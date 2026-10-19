@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.tox/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+repoatlas.json
+repoatlas.md
+repoatlas.svg
+.repoatlas/
