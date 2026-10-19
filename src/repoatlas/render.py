@@ -67,7 +67,6 @@ def render_svg(atlas: dict[str, Any], *, max_nodes: int = 48, max_edges: int = 1
     """Render an accessible, static dependency graph with no external assets or JavaScript."""
     validate_atlas(atlas)
     modules = sorted(atlas["modules"], key=lambda item: item["name"])[:max_nodes]
-    identifiers = {item["name"]: index for index, item in enumerate(modules)}
     card_w, card_h, gap_x, gap_y, columns = 252, 68, 30, 24, 4
     rows = max(1, math.ceil(len(modules) / columns))
     height = 112 + rows * (card_h + gap_y) + 54

@@ -8,9 +8,10 @@ import os
 import sys
 import tokenize
 from collections import defaultdict
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 from repoatlas import SCHEMA_VERSION, __version__
 from repoatlas.errors import RepoAtlasError

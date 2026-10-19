@@ -2,6 +2,8 @@
 
 from .users import find_user
 
+__all__ = ["find_user"]
+
 
 def record_lookup(user_id: str) -> None:
     _ = user_id
