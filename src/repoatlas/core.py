@@ -17,9 +17,28 @@ from repoatlas import SCHEMA_VERSION, __version__
 from repoatlas.errors import RepoAtlasError
 
 EXCLUDED_DIRS = {
-    ".git", ".hg", ".svn", ".venv", "venv", "env", "node_modules", "dist", "build",
-    "target", ".tox", ".nox", ".mypy_cache", ".pytest_cache", ".ruff_cache", "__pycache__",
-    "site-packages", "vendor", ".idea", ".vscode", ".repoatlas", "htmlcov",
+    ".git",
+    ".hg",
+    ".svn",
+    ".venv",
+    "venv",
+    "env",
+    "node_modules",
+    "dist",
+    "build",
+    "target",
+    ".tox",
+    ".nox",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    "__pycache__",
+    "site-packages",
+    "vendor",
+    ".idea",
+    ".vscode",
+    ".repoatlas",
+    "htmlcov",
 }
 EXCLUDED_FILES = {".DS_Store", "Thumbs.db", "repoatlas.json", "repoatlas.md", "repoatlas.svg"}
 MAX_FILE_COUNT = 50_000
@@ -39,7 +58,16 @@ def _category(path: str) -> str:
         return "test"
     if item.suffix.lower() in {".md", ".rst", ".adoc"} or "docs" in parts:
         return "documentation"
-    if item.name.lower() in {"pyproject.toml", "setup.py", "setup.cfg", "tox.ini", "makefile", "dockerfile", ".gitignore", "license"} or item.suffix.lower() in {".toml", ".ini", ".cfg", ".yml", ".yaml", ".json"}:
+    if item.name.lower() in {
+        "pyproject.toml",
+        "setup.py",
+        "setup.cfg",
+        "tox.ini",
+        "makefile",
+        "dockerfile",
+        ".gitignore",
+        "license",
+    } or item.suffix.lower() in {".toml", ".ini", ".cfg", ".yml", ".yaml", ".json"}:
         return "configuration"
     if item.suffix.lower() == ".py":
         return "python-source"
@@ -67,7 +95,16 @@ def _load_ignore_file(path: Path, base: str) -> list[dict[str, Any]]:
         anchored = line.startswith("/")
         line = line.strip("/")
         if line:
-            rules.append({"pattern": line, "base": base, "negate": negate, "dir": directory_only, "anchored": anchored, "slash": "/" in line})
+            rules.append(
+                {
+                    "pattern": line,
+                    "base": base,
+                    "negate": negate,
+                    "dir": directory_only,
+                    "anchored": anchored,
+                    "slash": "/" in line,
+                }
+            )
     return rules
 
 
@@ -77,7 +114,7 @@ def _matches_rule(rule: dict[str, Any], relative: str, is_dir: bool) -> bool:
         if relative == base:
             candidate = ""
         elif relative.startswith(base + "/"):
-            candidate = relative[len(base) + 1:]
+            candidate = relative[len(base) + 1 :]
         else:
             return False
     else:
@@ -88,7 +125,10 @@ def _matches_rule(rule: dict[str, Any], relative: str, is_dir: bool) -> bool:
         return False
     pattern = rule["pattern"]
     if rule["slash"] or rule["anchored"]:
-        return fnmatch.fnmatchcase(candidate, pattern) or any(fnmatch.fnmatchcase("/".join(candidate.split("/")[:i]), pattern) for i in range(1, len(candidate.split("/"))))
+        return fnmatch.fnmatchcase(candidate, pattern) or any(
+            fnmatch.fnmatchcase("/".join(candidate.split("/")[:i]), pattern)
+            for i in range(1, len(candidate.split("/")))
+        )
     return any(fnmatch.fnmatchcase(part, pattern) for part in candidate.split("/"))
 
 
@@ -131,9 +171,15 @@ def _main_guard(node: ast.AST) -> bool:
         return False
     left, right = node.test.left, node.test.comparators[0]
     return (
-        isinstance(left, ast.Name) and left.id == "__name__" and isinstance(right, ast.Constant) and right.value == "__main__"
+        isinstance(left, ast.Name)
+        and left.id == "__name__"
+        and isinstance(right, ast.Constant)
+        and right.value == "__main__"
     ) or (
-        isinstance(right, ast.Name) and right.id == "__name__" and isinstance(left, ast.Constant) and left.value == "__main__"
+        isinstance(right, ast.Name)
+        and right.id == "__name__"
+        and isinstance(left, ast.Constant)
+        and left.value == "__main__"
     )
 
 
@@ -143,22 +189,44 @@ def _source_imports(tree: ast.Module, module: str, is_package: bool, path: str) 
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                result.append({
-                    "source": module, "path": path, "line": node.lineno, "kind": "import",
-                    "imported": alias.name, "names": [], "base": alias.name,
-                })
+                result.append(
+                    {
+                        "source": module,
+                        "path": path,
+                        "line": node.lineno,
+                        "kind": "import",
+                        "imported": alias.name,
+                        "names": [],
+                        "base": alias.name,
+                    }
+                )
         elif isinstance(node, ast.ImportFrom):
             target_package = package
             if node.level:
                 components = target_package.split(".") if target_package else []
                 remove = node.level - 1
-                target_package = ".".join(components[:len(components) - remove]) if remove and remove < len(components) else (target_package if remove == 0 else "")
-            base = ".".join(part for part in (target_package, node.module or "") if part) if node.level else (node.module or "")
+                target_package = (
+                    ".".join(components[: len(components) - remove])
+                    if remove and remove < len(components)
+                    else (target_package if remove == 0 else "")
+                )
+            base = (
+                ".".join(part for part in (target_package, node.module or "") if part)
+                if node.level
+                else (node.module or "")
+            )
             names = [alias.name for alias in node.names]
-            result.append({
-                "source": module, "path": path, "line": node.lineno, "kind": "from",
-                "imported": base or ".", "names": names, "base": base,
-            })
+            result.append(
+                {
+                    "source": module,
+                    "path": path,
+                    "line": node.lineno,
+                    "kind": "from",
+                    "imported": base or ".",
+                    "names": names,
+                    "base": base,
+                }
+            )
     return sorted(result, key=lambda item: (item["line"], item["kind"], item["imported"]))
 
 
@@ -249,7 +317,9 @@ def scan_repository(
     total_bytes = 0
 
     def walk_error(error: OSError) -> None:
-        warnings.append({"code": "DIRECTORY_READ_FAILED", "path": str(error.filename or "."), "message": str(error)[:250]})
+        warnings.append(
+            {"code": "DIRECTORY_READ_FAILED", "path": str(error.filename or "."), "message": str(error)[:250]}
+        )
 
     for current_text, dirs, names in os.walk(root, topdown=True, followlinks=False, onerror=walk_error):
         current = Path(current_text)
@@ -278,12 +348,27 @@ def scan_repository(
                 warnings.append({"code": "FILE_STAT_FAILED", "path": relative, "message": str(exc)[:250]})
                 continue
             if size > MAX_SINGLE_FILE_BYTES:
-                warnings.append({"code": "FILE_TOO_LARGE", "path": relative, "message": f"Skipped file above {MAX_SINGLE_FILE_BYTES} bytes."})
+                warnings.append(
+                    {
+                        "code": "FILE_TOO_LARGE",
+                        "path": relative,
+                        "message": f"Skipped file above {MAX_SINGLE_FILE_BYTES} bytes.",
+                    }
+                )
                 continue
             if len(files) >= max_files:
-                raise RepoAtlasError(f"Repository exceeds --max-files={max_files}. Narrow the scan with --exclude or raise the limit.")
+                raise RepoAtlasError(
+                    f"Repository exceeds --max-files={max_files}. Narrow the scan with --exclude or raise the limit."
+                )
             total_bytes += size
-            files.append({"path": relative, "category": _category(relative), "extension": candidate.suffix.lower(), "size_bytes": size})
+            files.append(
+                {
+                    "path": relative,
+                    "category": _category(relative),
+                    "extension": candidate.suffix.lower(),
+                    "size_bytes": size,
+                }
+            )
             if candidate.suffix.lower() == ".py":
                 python_paths.append((relative, candidate, size))
     files.sort(key=lambda item: item["path"].casefold())
@@ -296,7 +381,13 @@ def scan_repository(
         source = ""
         tree = None
         if size > max_python_bytes:
-            warnings.append({"code": "PYTHON_FILE_TOO_LARGE", "path": relative, "message": f"Skipped AST parsing above {max_python_bytes} bytes."})
+            warnings.append(
+                {
+                    "code": "PYTHON_FILE_TOO_LARGE",
+                    "path": relative,
+                    "message": f"Skipped AST parsing above {max_python_bytes} bytes.",
+                }
+            )
         else:
             try:
                 with tokenize.open(path) as handle:
@@ -304,30 +395,55 @@ def scan_repository(
                 if len(source.encode("utf-8", errors="replace")) <= max_python_bytes:
                     tree = ast.parse(source, filename=relative, type_comments=True)
                 else:
-                    warnings.append({"code": "PYTHON_FILE_TOO_LARGE", "path": relative, "message": f"Skipped AST parsing above {max_python_bytes} bytes."})
+                    warnings.append(
+                        {
+                            "code": "PYTHON_FILE_TOO_LARGE",
+                            "path": relative,
+                            "message": f"Skipped AST parsing above {max_python_bytes} bytes.",
+                        }
+                    )
             except (OSError, UnicodeError, SyntaxError, ValueError) as exc:
                 warnings.append({"code": "PYTHON_PARSE_FAILED", "path": relative, "message": str(exc)[:250]})
         if tree is None:
-            modules.append({
-                "name": module, "path": relative, "is_package": is_package,
-                "line_count": len(source.splitlines()), "function_count": 0, "class_count": 0, "import_count": 0,
-                "has_main_guard": False, "docstring": None, "syntax_error": True, "analysis_status": "partial",
-            })
+            modules.append(
+                {
+                    "name": module,
+                    "path": relative,
+                    "is_package": is_package,
+                    "line_count": len(source.splitlines()),
+                    "function_count": 0,
+                    "class_count": 0,
+                    "import_count": 0,
+                    "has_main_guard": False,
+                    "docstring": None,
+                    "syntax_error": True,
+                    "analysis_status": "partial",
+                }
+            )
             continue
         imports = _source_imports(tree, module, is_package, relative)
         raw_imports.extend(imports)
         doc = ast.get_docstring(tree, clean=True)
         doc_summary = " ".join(doc.splitlines()).strip() if doc else None
-        modules.append({
-            "name": module, "path": relative, "is_package": is_package,
-            "line_count": len(source.splitlines()),
-            "function_count": sum(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) for node in ast.walk(tree)),
-            "class_count": sum(isinstance(node, ast.ClassDef) for node in ast.walk(tree)),
-            "import_count": len(imports),
-            "has_main_guard": any(_main_guard(node) for node in ast.walk(tree)),
-            "docstring": doc_summary[:220] + ("…" if doc_summary and len(doc_summary) > 220 else "") if doc_summary else None,
-            "syntax_error": False, "analysis_status": "parsed",
-        })
+        modules.append(
+            {
+                "name": module,
+                "path": relative,
+                "is_package": is_package,
+                "line_count": len(source.splitlines()),
+                "function_count": sum(
+                    isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) for node in ast.walk(tree)
+                ),
+                "class_count": sum(isinstance(node, ast.ClassDef) for node in ast.walk(tree)),
+                "import_count": len(imports),
+                "has_main_guard": any(_main_guard(node) for node in ast.walk(tree)),
+                "docstring": doc_summary[:220] + ("…" if doc_summary and len(doc_summary) > 220 else "")
+                if doc_summary
+                else None,
+                "syntax_error": False,
+                "analysis_status": "parsed",
+            }
+        )
     modules.sort(key=lambda item: (item["name"], item["path"]))
     known = {module["name"] for module in modules}
     stdlib = getattr(sys, "stdlib_module_names", frozenset())
@@ -389,16 +505,25 @@ def scan_repository(
     if pyproject.is_file():
         try:
             import tomllib
+
             toml = tomllib.loads(pyproject.read_text(encoding="utf-8"))
             scripts = toml.get("project", {}).get("scripts", {})
             if isinstance(scripts, dict):
                 for name, target in sorted(scripts.items()):
                     if isinstance(name, str) and isinstance(target, str):
-                        entries.append({"path": "pyproject.toml", "kind": "console-script", "module": f"{name} -> {target}"})
+                        entries.append(
+                            {"path": "pyproject.toml", "kind": "console-script", "module": f"{name} -> {target}"}
+                        )
         except ImportError:
             pass
         except (OSError, ValueError, TypeError):
-            warnings.append({"code": "PYPROJECT_PARSE_FAILED", "path": "pyproject.toml", "message": "Unable to parse project script metadata."})
+            warnings.append(
+                {
+                    "code": "PYPROJECT_PARSE_FAILED",
+                    "path": "pyproject.toml",
+                    "message": "Unable to parse project script metadata.",
+                }
+            )
     entries.sort(key=lambda item: (item["path"], item["kind"], item["module"]))
     imports.sort(key=lambda item: (item["source"], item["line"], item["imported"]))
     warnings.sort(key=lambda item: (item["path"], item["code"], item["message"]))
@@ -407,36 +532,91 @@ def scan_repository(
     readmes = [item for item in files if Path(item["path"]).name.lower().startswith("readme")]
     findings: list[dict[str, Any]] = []
     if not readmes:
-        findings.append({"code": "README_MISSING", "severity": "warning", "message": "No README was found in the included repository tree.", "recommendation": "Add the purpose, supported scope, installation, quick start, examples, and contribution instructions."})
+        findings.append(
+            {
+                "code": "README_MISSING",
+                "severity": "warning",
+                "message": "No README was found in the included repository tree.",
+                "recommendation": "Add the purpose, supported scope, installation, quick start, examples, and contribution instructions.",
+            }
+        )
     if not entries:
-        findings.append({"code": "ENTRYPOINT_NOT_DETECTED", "severity": "info", "message": "No Python main guard, __main__.py, or detected console script was found.", "recommendation": "Document the intended invocation or define an explicit package entry point if the project is executable."})
+        findings.append(
+            {
+                "code": "ENTRYPOINT_NOT_DETECTED",
+                "severity": "info",
+                "message": "No Python main guard, __main__.py, or detected console script was found.",
+                "recommendation": "Document the intended invocation or define an explicit package entry point if the project is executable.",
+            }
+        )
     if cycle_list:
-        findings.append({"code": "IMPORT_CYCLES_DETECTED", "severity": "warning", "message": f"{len(cycle_list)} strongly connected import component(s) were detected.", "recommendation": "Review cyclic dependencies and consider extracting shared interfaces into lower-level modules."})
+        findings.append(
+            {
+                "code": "IMPORT_CYCLES_DETECTED",
+                "severity": "warning",
+                "message": f"{len(cycle_list)} strongly connected import component(s) were detected.",
+                "recommendation": "Review cyclic dependencies and consider extracting shared interfaces into lower-level modules.",
+            }
+        )
     parse_count = sum(bool(module["syntax_error"]) for module in modules)
     if parse_count:
-        findings.append({"code": "PYTHON_PARSE_ERRORS", "severity": "warning", "message": f"{parse_count} Python file(s) could not be fully parsed.", "recommendation": "Inspect parse warnings; metrics and dependency edges for those files are incomplete."})
+        findings.append(
+            {
+                "code": "PYTHON_PARSE_ERRORS",
+                "severity": "warning",
+                "message": f"{parse_count} Python file(s) could not be fully parsed.",
+                "recommendation": "Inspect parse warnings; metrics and dependency edges for those files are incomplete.",
+            }
+        )
     if not modules:
-        findings.append({"code": "NO_PYTHON_MODULES", "severity": "info", "message": "No Python files were included; only the generic file inventory is available.", "recommendation": "This version analyzes Python ASTs. Add Python files to enable module relationship analysis."})
+        findings.append(
+            {
+                "code": "NO_PYTHON_MODULES",
+                "severity": "info",
+                "message": "No Python files were included; only the generic file inventory is available.",
+                "recommendation": "This version analyzes Python ASTs. Add Python files to enable module relationship analysis.",
+            }
+        )
     return {
         "schema_version": SCHEMA_VERSION,
         "tool": {"name": "repoatlas", "version": __version__},
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "repository": {"name": root.name, "root_label": ".", "absolute_path_recorded": False},
         "summary": {
-            "file_count": len(files), "python_file_count": py_count, "documentation_file_count": categories["documentation"],
-            "configuration_file_count": categories["configuration"], "test_file_count": categories["test"],
-            "total_bytes": total_bytes, "python_line_count": total_lines, "module_count": len(modules),
+            "file_count": len(files),
+            "python_file_count": py_count,
+            "documentation_file_count": categories["documentation"],
+            "configuration_file_count": categories["configuration"],
+            "test_file_count": categories["test"],
+            "total_bytes": total_bytes,
+            "python_line_count": total_lines,
+            "module_count": len(modules),
             "parsed_module_count": sum(module["analysis_status"] == "parsed" for module in modules),
-            "import_record_count": len(imports), "internal_edge_count": len(edges), "external_import_count": len(external),
-            "cycle_count": len(cycle_list), "parse_warning_count": parse_count, "entrypoint_count": len(entries),
+            "import_record_count": len(imports),
+            "internal_edge_count": len(edges),
+            "external_import_count": len(external),
+            "cycle_count": len(cycle_list),
+            "parse_warning_count": parse_count,
+            "entrypoint_count": len(entries),
             "finding_count": len(findings),
         },
-        "files": files, "modules": modules, "imports": imports, "edges": edges,
-        "external_imports": sorted(external), "cycles": cycle_list, "entrypoints": entries, "findings": findings,
+        "files": files,
+        "modules": modules,
+        "imports": imports,
+        "edges": edges,
+        "external_imports": sorted(external),
+        "cycles": cycle_list,
+        "entrypoints": entries,
+        "findings": findings,
         "warnings": warnings,
         "analysis": {
-            "language": "Python", "method": "ast", "project_code_executed": False, "network_requests_made": False,
-            "absolute_paths_recorded": False, "max_python_bytes": max_python_bytes, "max_files": max_files,
+            "language": "Python",
+            "method": "ast",
+            "project_code_executed": False,
+            "network_requests_made": False,
+            "absolute_paths_recorded": False,
+            "max_python_bytes": max_python_bytes,
+            "max_files": max_files,
             "limitations": [
                 "Static import edges show declared imports, not runtime call paths.",
                 "Dynamic imports, reflection, plugin discovery, and generated modules may not be resolved.",
@@ -445,4 +625,3 @@ def scan_repository(
             ],
         },
     }
-

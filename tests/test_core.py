@@ -79,7 +79,12 @@ class CoreTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             self.write(root, "a.py", "x = 1\n" * 10)
-            self.assertTrue(any(item["code"] == "PYTHON_FILE_TOO_LARGE" for item in scan_repository(root, max_python_bytes=5)["warnings"]))
+            self.assertTrue(
+                any(
+                    item["code"] == "PYTHON_FILE_TOO_LARGE"
+                    for item in scan_repository(root, max_python_bytes=5)["warnings"]
+                )
+            )
             with self.assertRaises(RepoAtlasError):
                 scan_repository(root, max_files=0)
             with self.assertRaises(RepoAtlasError):

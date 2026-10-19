@@ -39,7 +39,9 @@ def _atomic_write(filename: str, content: str, *, force: bool = False) -> Path:
             try:
                 os.link(temporary, target)
             except FileExistsError as exc:
-                raise RepoAtlasError(f"Output already exists: {target}. Use --force only when replacement is intended.") from exc
+                raise RepoAtlasError(
+                    f"Output already exists: {target}. Use --force only when replacement is intended."
+                ) from exc
             temporary.unlink()
         return target
     except RepoAtlasError:
@@ -63,7 +65,7 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="repoatlas",
         description="Map a Python repository into inventory, import graphs, cycle diagnostics, and visual exports.",
-        epilog="Static analysis only: RepoAtlas never imports or executes target project modules."
+        epilog="Static analysis only: RepoAtlas never imports or executes target project modules.",
     )
     parser.add_argument("--version", action="version", version=f"RepoAtlas {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -72,7 +74,9 @@ def _parser() -> argparse.ArgumentParser:
     scan.add_argument("-o", "--output", default="repoatlas.json", help="JSON snapshot path, or '-' for stdout.")
     scan.add_argument("--exclude", action="append", default=[], help="Additional exclusion glob; repeatable.")
     scan.add_argument("--max-files", type=int, default=50_000, help="Maximum inventoried files.")
-    scan.add_argument("--max-python-bytes", type=int, default=2 * 1024 * 1024, help="Maximum Python bytes parsed per file.")
+    scan.add_argument(
+        "--max-python-bytes", type=int, default=2 * 1024 * 1024, help="Maximum Python bytes parsed per file."
+    )
     scan.add_argument("--force", action="store_true", help="Replace output when it exists.")
     render = sub.add_parser("render", help="Render a snapshot as Markdown, Mermaid, SVG, or JSON.")
     render.add_argument("snapshot", help="Path to a RepoAtlas JSON snapshot.")
@@ -115,7 +119,9 @@ def main(argv: list[str] | None = None) -> int:
                     excludes.append(output_path)
                 except (OSError, ValueError):
                     pass
-            atlas = scan_repository(root, excludes=excludes, max_files=args.max_files, max_python_bytes=args.max_python_bytes)
+            atlas = scan_repository(
+                root, excludes=excludes, max_files=args.max_files, max_python_bytes=args.max_python_bytes
+            )
             serialized = json.dumps(atlas, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
             if args.output == "-":
                 sys.stdout.write(serialized)
@@ -123,7 +129,9 @@ def main(argv: list[str] | None = None) -> int:
                 target = _atomic_write(args.output, serialized, force=args.force)
                 summary = atlas["summary"]
                 print(f"RepoAtlas scan complete: {atlas['repository']['name']}")
-                print(f"Files: {summary['file_count']:,} | Python modules: {summary['module_count']:,} | Internal edges: {summary['internal_edge_count']:,} | Cycles: {summary['cycle_count']:,}")
+                print(
+                    f"Files: {summary['file_count']:,} | Python modules: {summary['module_count']:,} | Internal edges: {summary['internal_edge_count']:,} | Cycles: {summary['cycle_count']:,}"
+                )
                 print(f"Snapshot: {target}")
                 if atlas["warnings"]:
                     print(f"Warnings: {len(atlas['warnings'])}. Render Markdown for details.")
