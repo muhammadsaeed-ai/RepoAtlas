@@ -73,7 +73,11 @@ def _parser() -> argparse.ArgumentParser:
     scan.add_argument("repository", nargs="?", default=".", help="Repository directory; defaults to current directory.")
     scan.add_argument("-o", "--output", default="repoatlas.json", help="JSON snapshot path, or '-' for stdout.")
     scan.add_argument("--exclude", action="append", default=[], help="Additional exclusion glob; repeatable.")
-    scan.add_argument("--include-docstrings", action="store_true", help="Include module docstring summaries in the snapshot; off by default.")
+    scan.add_argument(
+        "--include-docstrings",
+        action="store_true",
+        help="Include module docstring summaries in the snapshot; off by default.",
+    )
     scan.add_argument("--max-files", type=int, default=50_000, help="Maximum inventoried files.")
     scan.add_argument(
         "--max-python-bytes", type=int, default=2 * 1024 * 1024, help="Maximum Python bytes parsed per file."
