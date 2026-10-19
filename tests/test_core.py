@@ -139,7 +139,6 @@ class CoreTests(unittest.TestCase):
         svg = render_svg(atlas, max_nodes=8)
         self.assertIn("Showing 8 of 60", svg)
 
-
     def test_module_docstrings_are_opt_in(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
