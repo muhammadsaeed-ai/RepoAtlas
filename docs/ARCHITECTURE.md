@@ -27,7 +27,7 @@ flowchart TD
 
 ## Data model
 
-Each parsed Python source becomes a module record with name, repository-relative path, package marker, line/function/class counts, docstring summary, main-guard signal and graph degree. Each import declaration retains module, source path and line, import kind, imported symbol names, classification and resolved target when one is found.
+Each parsed Python source becomes a module record with name, repository-relative path, package marker, line/function/class counts, optional docstring summary, main-guard signal and graph degree. Docstring summaries are omitted unless --include-docstrings is explicitly supplied. Each import declaration retains module, source path and line, import kind, imported symbol names, classification and resolved target when one is found.
 
 Edges aggregate source/target relationships and keep source-line references. Cycles are strongly connected import components, calculated by iterative Kosaraju traversal rather than recursive DFS.
 
@@ -38,6 +38,7 @@ Edges aggregate source/target relationships and keep source-line references. Cyc
 3. Symlinks are skipped rather than followed.
 4. Common virtualenv, vendor, cache and build directories are excluded by default.
 5. Snapshots store relative paths, not the absolute repository root.
+6. Module docstring summaries are excluded by default; users must explicitly opt in to serialize them.
 6. File inventory, snapshot loading, and graph output are bounded.
 7. SVG text is escaped; Mermaid identifiers are generated from a counter rather than copied from paths.
 8. Scan and render do not make network requests.

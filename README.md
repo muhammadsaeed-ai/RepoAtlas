@@ -4,6 +4,8 @@
   <img src="assets/readme/hero.svg" alt="RepoAtlas — Python repository analysis and architecture visualization." width="100%" />
 </p>
 
+<p align="center"><img src="assets/readme/progress-loop.gif" alt="Animated RepoAtlas scan-to-graph progress indicator." width="180" /></p>
+
 <p align="center"><strong>Understand a codebase before you change it.</strong><br/>Static import graphs · cycle detection · structural metrics · beautiful, portable exports</p>
 
 <p align="center">
@@ -29,7 +31,7 @@ The scanner does not import or run target code, and it does not make network req
 | Capability | Output | Developer value |
 |---|---|---|
 | Repository inventory | Relative paths, categories, file sizes | Understand repository shape quickly |
-| AST metrics | Lines, functions, classes, docstring summary | Find complex or important modules |
+| AST metrics | Lines, functions, classes, optional docstring summaries | Find complex or important modules |
 | Internal dependency graph | Directed edges, import lines, in/out degree | Navigate declared code relationships |
 | Cycle detection | Strongly connected import groups | Find coupling worth reviewing |
 | Entry-point signals | Main guards, __main__.py, detected console scripts | Locate likely execution paths |
@@ -131,6 +133,9 @@ Open the SVG in a browser or vector editor. The sample intentionally includes a 
 ~~~bash
 repoatlas scan . --exclude "generated/**" --exclude "*.snap"
 repoatlas scan . --max-files 20000 --max-python-bytes 1048576 --output atlas.json
+
+# Include module-level docstring summaries only when intentionally requested
+repoatlas scan . --include-docstrings --output atlas-with-docstrings.json
 repoatlas scan . --output -
 repoatlas render atlas.json --format markdown --output atlas-report.md --force
 ~~~
@@ -142,10 +147,10 @@ Common generated folders are excluded by default and root/nested .gitignore patt
 - Target modules are never imported or executed.
 - The scanner makes no network requests and performs no source upload.
 - Snapshots contain repository-relative paths, not the absolute root path.
-- Python source is parsed locally but source contents are never embedded in JSON.
+- Python source is parsed locally and source text is not embedded in the snapshot. Module docstring summaries are excluded by default and can be included explicitly with `--include-docstrings`.
 - Symlinked files and directories are skipped rather than followed.
 - File count, source reads, snapshot loading, and graph exports have limits.
-- Reports can still reveal module names, relative paths, docstrings and dependencies. Review before sharing outside your team.
+- Reports can still reveal module names, relative paths, and dependencies. If you enable `--include-docstrings`, review those summaries before sharing outside your team.
 
 See [Security policy](SECURITY.md) and [Architecture](docs/ARCHITECTURE.md).
 

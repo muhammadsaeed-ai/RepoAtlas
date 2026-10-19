@@ -26,6 +26,9 @@ python -m pytest
 
 ~~~bash
 repoatlas scan /path/to/project --output atlas.json
+
+# Opt in to adding module-level docstring summaries to the snapshot
+repoatlas scan /path/to/project --include-docstrings --output atlas-with-docstrings.json
 repoatlas render atlas.json --format markdown --output atlas-report.md
 repoatlas render atlas.json --format mermaid --output dependency-graph.mmd
 repoatlas render atlas.json --format svg --output dependency-map.svg
@@ -50,7 +53,7 @@ No. It parses Python source with ast and never imports the target modules.
 
 ### Does it upload source?
 
-No. The scanner makes no network requests. Review reports before sharing because module names, paths, docstrings and dependency names may expose private structure.
+No. The scanner makes no network requests. Module docstring summaries are excluded by default; if you enable --include-docstrings, those summaries are added to the snapshot. Review reports before sharing because paths and dependency names may expose private structure.
 
 ### Does it support JavaScript, Go or Rust?
 

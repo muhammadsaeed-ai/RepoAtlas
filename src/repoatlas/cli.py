@@ -73,6 +73,7 @@ def _parser() -> argparse.ArgumentParser:
     scan.add_argument("repository", nargs="?", default=".", help="Repository directory; defaults to current directory.")
     scan.add_argument("-o", "--output", default="repoatlas.json", help="JSON snapshot path, or '-' for stdout.")
     scan.add_argument("--exclude", action="append", default=[], help="Additional exclusion glob; repeatable.")
+    scan.add_argument("--include-docstrings", action="store_true", help="Include module docstring summaries in the snapshot; off by default.")
     scan.add_argument("--max-files", type=int, default=50_000, help="Maximum inventoried files.")
     scan.add_argument(
         "--max-python-bytes", type=int, default=2 * 1024 * 1024, help="Maximum Python bytes parsed per file."
@@ -111,7 +112,10 @@ def main(argv: list[str] | None = None) -> int:
         return int(exc.code or 0)
     try:
         if args.command == "scan":
-            root = Path(args.repository).expanduser().resolve(strict=True)
+            try:
+                root = Path(args.repository).expanduser().resolve(strict=True)
+            except (OSError, RuntimeError, ValueError) as exc:
+                raise RepoAtlasError(f"Repository path cannot be resolved: {args.repository!r}") from exc
             excludes = list(args.exclude)
             if args.output != "-":
                 try:
@@ -120,7 +124,11 @@ def main(argv: list[str] | None = None) -> int:
                 except (OSError, ValueError):
                     pass
             atlas = scan_repository(
-                root, excludes=excludes, max_files=args.max_files, max_python_bytes=args.max_python_bytes
+                root,
+                excludes=excludes,
+                max_files=args.max_files,
+                max_python_bytes=args.max_python_bytes,
+                include_docstrings=args.include_docstrings,
             )
             serialized = json.dumps(atlas, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
             if args.output == "-":

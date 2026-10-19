@@ -297,6 +297,7 @@ def scan_repository(
     excludes: Iterable[str] = (),
     max_files: int = MAX_FILE_COUNT,
     max_python_bytes: int = MAX_PYTHON_BYTES,
+    include_docstrings: bool = False,
 ) -> dict[str, Any]:
     """Inspect a directory without importing or executing its Python modules."""
     raw = Path(repository).expanduser()
@@ -423,7 +424,7 @@ def scan_repository(
             continue
         imports = _source_imports(tree, module, is_package, relative)
         raw_imports.extend(imports)
-        doc = ast.get_docstring(tree, clean=True)
+        doc = ast.get_docstring(tree, clean=True) if include_docstrings else None
         doc_summary = " ".join(doc.splitlines()).strip() if doc else None
         modules.append(
             {
@@ -617,6 +618,7 @@ def scan_repository(
             "absolute_paths_recorded": False,
             "max_python_bytes": max_python_bytes,
             "max_files": max_files,
+            "module_docstrings_included": include_docstrings,
             "limitations": [
                 "Static import edges show declared imports, not runtime call paths.",
                 "Dynamic imports, reflection, plugin discovery, and generated modules may not be resolved.",

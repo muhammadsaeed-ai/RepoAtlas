@@ -139,6 +139,19 @@ class CoreTests(unittest.TestCase):
         svg = render_svg(atlas, max_nodes=8)
         self.assertIn("Showing 8 of 60", svg)
 
+
+    def test_module_docstrings_are_opt_in(self) -> None:
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            self.write(root, "app.py", '"""DOCSTRING_SHOULD_BE_OPT_IN_482."""\\nvalue = 1\\n')
+            default_atlas = scan_repository(root)
+            explicit_atlas = scan_repository(root, include_docstrings=True)
+        self.assertIsNone(default_atlas["modules"][0]["docstring"])
+        self.assertFalse(default_atlas["analysis"]["module_docstrings_included"])
+        self.assertNotIn("DOCSTRING_SHOULD_BE_OPT_IN_482", json.dumps(default_atlas))
+        self.assertIn("DOCSTRING_SHOULD_BE_OPT_IN_482", json.dumps(explicit_atlas))
+        self.assertTrue(explicit_atlas["analysis"]["module_docstrings_included"])
+
     def test_outputs_have_deterministic_order(self) -> None:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
