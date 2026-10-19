@@ -47,12 +47,19 @@ def create_frame(frame: int) -> Image.Image:
     rounded(draw, (28, 22, 72, 66), 12, (8, 37, 61, 255), (41, 217, 247, 210), 2)
     for y, x2 in ((36, 59), (44, 60), (52, 54)):
         draw.line((39, y, x2, y), fill=(81, 226, 255, 255), width=3)
-    draw.text((87, 22), "Repo", font=font(28, bold=True), fill=(242, 248, 255, 255))
-    draw.text((153, 22), "Atlas", font=font(28, bold=True), fill=(57, 220, 250, 255))
+    # Measure the first brand segment instead of hard-coding the second segment's
+    # position. Fixed x-coordinates caused "Repo" and "Atlas" to overlap at this font size.
+    brand_font = font(28, bold=True)
+    brand_x = 87
+    draw.text((brand_x, 22), "Repo", font=brand_font, fill=(242, 248, 255, 255))
+    repo_width = draw.textbbox((brand_x, 22), "Repo", font=brand_font)[2] - brand_x
+    atlas_x = brand_x + repo_width + 4
+    draw.text((atlas_x, 22), "Atlas", font=brand_font, fill=(57, 220, 250, 255))
     draw.text((89, 52), "PYTHON REPOSITORY INTELLIGENCE", font=font(10, bold=True), fill=(130, 172, 210, 255))
     rounded(draw, (805, 28, 970, 58), 15, (12, 37, 54, 240), (45, 180, 199, 200), 1)
     draw.ellipse((820, 39, 828, 47), fill=(56, 224, 177, 255))
-    draw.text((838, 35), "LOCAL-FIRST ANALYSIS", font=font(10, bold=True), fill=(196, 235, 246, 255))
+    badge_font = font(9, bold=True)
+    draw.text((899, 43), "LOCAL-FIRST ANALYSIS", font=badge_font, fill=(196, 235, 246, 255), anchor="mm")
 
     draw.text((30, 91), "See how your codebase", font=font(29, bold=True), fill=(244, 248, 255, 255))
     draw.text((30, 126), "actually connects.", font=font(29, bold=True), fill=(65, 219, 250, 255))
@@ -86,7 +93,7 @@ def create_frame(frame: int) -> Image.Image:
     rounded(draw, (495, 91, 970, 385), 17, (7, 17, 32, 250), (40, 79, 116, 245), 1)
     rounded(draw, (495, 91, 970, 126), 17, (13, 31, 52, 255), (40, 79, 116, 245), 1)
     draw.rectangle((495, 111, 970, 126), fill=(13, 31, 52, 255))
-    draw.text((516, 102), "EXAMPLE DEPENDENCY MAP", font=font(11, bold=True), fill=(197, 224, 242, 255))
+    draw.text((516, 102), "DEPENDENCY GRAPH", font=font(10, bold=True), fill=(197, 224, 242, 255))
     draw.text((947, 102), "SVG PREVIEW", font=font(9, bold=True), fill=(103, 211, 242, 255), anchor="ra")
 
     nodes = {
