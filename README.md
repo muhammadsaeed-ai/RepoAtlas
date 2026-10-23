@@ -64,7 +64,7 @@ A folder tree tells you **what exists**. RepoAtlas adds a first-pass view of **h
 Python 3.10 or newer is required. The runtime has **zero mandatory third-party dependencies**.
 
 ~~~bash
-git clone https://github.com/muhammadsaeed-ai/RepoAtlas.git
+git clone https://github.com/muhammadsaeed-ai/verity-repoatlas.git
 cd RepoAtlas
 python -m venv .venv
 ~~~
